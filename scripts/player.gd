@@ -8,14 +8,20 @@ var terminal_velocity = 16
 
 onready var rays = {"DL":$Ray_DownLeft,"DR":$Ray_DownRight,"FT":$Ray_ForwardTop,"FB":$Ray_ForwardBottom}
 onready var collider = $Collision
+onready var anim = $AnimationPlayer
+onready var tween = $Tween
 
-
+var movement_disabled = false
 var velocity = Vector2()
 
 func _ready():
 	pass
 
 func _physics_process(delta):
+	if !movement_disabled:
+		process_movement_control()
+
+func process_movement_control():
 	rotation = gravity_direction.angle_to(DOWN)
 	var input_velocity = Vector2()
 	if Input.is_action_pressed("move_right"):
@@ -35,7 +41,8 @@ func _physics_process(delta):
 		else:
 			velocity.y = 0
 			if Input.is_action_just_pressed("move_shift") and (input_velocity.x != 0 || Input.is_action_pressed("move_duck")):
-				shift(input_velocity.normalized())
+				#TODO: change 10 below to get the thickness of the current box
+				shift(input_velocity.normalized(),10)
 	else:
 		if against_wall():
 			if Input.is_action_just_pressed("move_jump"):
@@ -64,16 +71,28 @@ func _physics_process(delta):
 	var fv_y = Vector2(0, final_velocity.y)
 	move_and_collide(fv_y)
 
-func shift(input_velocity):
+func shift(input_velocity, distance):
 	var shift_dir = null
 	if input_velocity.x != 0:
 		if Input.is_action_pressed("move_left"):
 			shift_dir = Vector2(-1,0)
+			anim.play("shift_horizontal")
 		elif Input.is_action_pressed("move_right"):
 			shift_dir = Vector2(1,0)
+			anim.play("shift_horizontal")
+		else:
+			return
 	elif Input.is_action_pressed("move_duck"):
 		shift_dir = Vector2(0,1)
-	
+		anim.play("shift_vertical")
+	if shift_dir == null:
+		return
+	movement_disabled = true
+	tween.interpolate_property(self, 'position', position, position + shift_dir*(64+distance),0.4)
+	tween.start()
+
+func enable_movement():
+	movement_disabled = false
 
 func on_ground():
 	return rays["DL"].is_colliding() || rays["DR"].is_colliding()
