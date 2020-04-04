@@ -1,8 +1,13 @@
 extends Node2D
 
 const BOX_SCENE = preload("res://scenes/Box.tscn")
+const COLOR_DICT = {"WHITE":Color(0.89,0.87,0.87),"RED":Color(0.96,0.27,0.24),"BLUE":Color(0.16,0.18,0.47),"YELLOW":Color(0.91,0.72,0.18)}
+# RED 246,70,60 : LEFT
+# BLUE 42,46,119 : RIGHT
+# YELLOW 233,184,47 : UP
+# WHITE(?) 226 ,222, 221 : DOWN
 
-var TEST_LEVEL = [{"x":0,"y":0,"width":450,"height":300,"color":Color(255,255,255)},{"x":0,"y":300,"width":300,"height":250,"color":Color(255,0,0)}]
+var TEST_LEVEL = [{"x":0,"y":0,"width":450,"height":300,"color":COLOR_DICT["WHITE"]},{"x":0,"y":300,"width":100,"height":250,"color":COLOR_DICT["RED"]},{"x":100,"y":300,"width":350,"height":250,"color":COLOR_DICT["YELLOW"]},{"x":450,"y":0,"width":150,"height":550,"color":COLOR_DICT["BLUE"]}]
 
 var boxes = []
 

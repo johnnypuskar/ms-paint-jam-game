@@ -3,7 +3,7 @@
 [ext_resource path="res://images/player/temp_guy.png" type="Texture" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=1]
 resource_name = "shift_horizontal"
 length = 0.4
 tracks/0/type = "value"
@@ -33,9 +33,10 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=2]
 resource_name = "shift_vertical"
 length = 0.4
+step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
@@ -70,13 +71,16 @@ extents = Vector2( 32, 32 )
 collision_layer = 3
 collision_mask = 3
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/shift_horizontal = SubResource( 4 )
-anims/shift_vertical = SubResource( 5 )
+anims/shift_horizontal = SubResource( 1 )
+anims/shift_vertical = SubResource( 2 )
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource( 3 )
@@ -104,5 +108,13 @@ position = Vector2( 32, 32 )
 enabled = true
 cast_to = Vector2( 1, 0 )
 collision_mask = 2
+
+[node name="CenterPoint" type="RayCast2D" parent="."]
+position = Vector2( 0, -0.5 )
+enabled = true
+cast_to = Vector2( 0, 1 )
+collision_mask = 4
+collide_with_areas = true
+collide_with_bodies = false
 
 [node name="Tween" type="Tween" parent="."]

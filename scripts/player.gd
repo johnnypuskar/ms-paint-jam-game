@@ -7,6 +7,7 @@ export var speed = 8
 var terminal_velocity = 16
 
 onready var rays = {"DL":$Ray_DownLeft,"DR":$Ray_DownRight,"FT":$Ray_ForwardTop,"FB":$Ray_ForwardBottom}
+onready var center = $CenterPoint
 onready var collider = $Collision
 onready var anim = $AnimationPlayer
 onready var tween = $Tween
@@ -20,9 +21,10 @@ func _ready():
 func _physics_process(delta):
 	if !movement_disabled:
 		process_movement_control()
+	set_gravity()
 
 func process_movement_control():
-	rotation = gravity_direction.angle_to(DOWN)
+	rotation = DOWN.angle_to(gravity_direction)
 	var input_velocity = Vector2()
 	if Input.is_action_pressed("move_right"):
 		input_velocity.x += speed
@@ -65,34 +67,35 @@ func process_movement_control():
 	velocity = speed_adjust(velocity,input_velocity,1.5)
 	velocity.y = min(fall_speed_limiter, velocity.y)
 	
-	var final_velocity = velocity.rotated(gravity_direction.angle_to(DOWN))
+	var final_velocity = velocity.rotated(-gravity_direction.angle_to(DOWN))
 	var fv_x = Vector2(final_velocity.x, 0)
 	move_and_collide(fv_x)
 	var fv_y = Vector2(0, final_velocity.y)
 	move_and_collide(fv_y)
 
 func shift(input_velocity, distance):
-	var shift_dir = null
-	if input_velocity.x != 0:
-		if Input.is_action_pressed("move_left"):
-			shift_dir = Vector2(-1,0)
-			anim.play("shift_horizontal")
-		elif Input.is_action_pressed("move_right"):
-			shift_dir = Vector2(1,0)
-			anim.play("shift_horizontal")
-		else:
-			return
-	elif Input.is_action_pressed("move_duck"):
-		shift_dir = Vector2(0,1)
-		anim.play("shift_vertical")
-	if shift_dir == null:
+	if !(against_wall() and input_velocity.x != 0) and !(Input.is_action_pressed("move_duck")):
 		return
+	var shift_dir = Vector2()
+	if input_velocity.x != 0:
+		shift_dir.x = sign(input_velocity.x)
+		anim.play("shift_horizontal")
+	elif Input.is_action_pressed("move_duck"):
+		shift_dir.y = 1
+		anim.play("shift_vertical")
+	shift_dir = shift_dir.normalized()
+	var grav_angle = DOWN.angle_to(gravity_direction)
+	shift_dir = shift_dir.rotated(grav_angle)
 	movement_disabled = true
 	tween.interpolate_property(self, 'position', position, position + shift_dir*(64+distance),0.4)
 	tween.start()
 
 func enable_movement():
 	movement_disabled = false
+
+func set_gravity():
+	if center.is_colliding():
+		gravity_direction = center.get_collider().get_parent().gravity
 
 func on_ground():
 	return rays["DL"].is_colliding() || rays["DR"].is_colliding()
