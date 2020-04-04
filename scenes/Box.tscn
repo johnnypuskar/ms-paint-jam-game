@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/box.gd" type="Script" id=1]
+
+[node name="Box" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 1 )
+color = Color( 0, 0.0156863, 1, 1 )
+
+[node name="Background" type="Polygon2D" parent="."]
+
+[node name="Outline" type="Line2D" parent="."]
+default_color = Color( 0, 0, 0, 1 )
+
+[node name="WallTop" type="CollisionShape2D" parent="."]
+
+[node name="WallLeft" type="CollisionShape2D" parent="."]
+
+[node name="WallBottom" type="CollisionShape2D" parent="."]
+
+[node name="WallRight" type="CollisionShape2D" parent="."]
