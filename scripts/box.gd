@@ -9,21 +9,24 @@ export var color = Color(1.0, 1.0, 1.0)
 # BLUE 42,46,119 : RIGHT
 # YELLOW 233,184,47 : UP
 # WHITE(?) 226 ,222, 221 : DOWN
-const GRAV_DICT = {Color(0.89,0.87,0.87):Vector2(0,1),Color(0.96,0.27,0.24):Vector2(1,0),Color(0.16,0.18,0.47):Vector2(-1,0),Color(0.91,0.72,0.18):Vector2(0,-1)}
+const GRAV_DICT = {Color(0,0,0):null,Color(0.89,0.87,0.87):null,Color(0.96,0.27,0.24):Vector2(1,0),Color(0.16,0.18,0.47):Vector2(-1,0),Color(0.91,0.72,0.18):Vector2(0,-1)}
 export var gravity = Vector2(0,1)
+export var solid = false
 
 onready var walls = {"top":$WallTop,"bottom":$WallBottom,"left":$WallLeft,"right":$WallRight}
 onready var background = $Background
 onready var outline = $Outline
 onready var area_shape = $GravityArea/CollisionZone
+onready var center_col = $CentralCollision
 
-func set_data(new_x, new_y, new_width, new_height, new_color, new_thickness):
+func set_data(new_x, new_y, new_width, new_height, new_color, new_thickness, solid):
 	self.position = Vector2(new_x, new_y)
 	self.width = new_width
 	self.height = new_height
 	self.color = new_color
 	self.outlineThickness = new_thickness
 	self.gravity = GRAV_DICT[color]
+	self.solid = solid
 
 func _ready():
 	walls["top"].shape = RectangleShape2D.new()
@@ -46,6 +49,9 @@ func _ready():
 	area_shape.shape = RectangleShape2D.new()
 	area_shape.position = Vector2(width/2,height/2)
 	area_shape.shape.extents = area_shape.position
+	
+	center_col.shape = area_shape
+	center_col.disabled = !solid
 	
 	outline.width = outlineThickness
 	outline.points = PoolVector2Array([Vector2(0,0),Vector2(width,0),Vector2(width,height),Vector2(0,height),Vector2(0,0-outlineThickness/2)])

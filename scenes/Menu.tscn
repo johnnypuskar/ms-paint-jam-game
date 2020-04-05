@@ -1,0 +1,124 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://images/ui/title.png" type="Texture" id=1]
+[ext_resource path="res://scripts/menu_button.gd" type="Script" id=2]
+[ext_resource path="res://images/ui/brush_clean.png" type="Texture" id=3]
+[ext_resource path="res://fonts/RAYJOHNS.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 26
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[node name="Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 0.8
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TitleContainer" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 143.0
+margin_right = 720.0
+margin_bottom = 238.0
+
+[node name="Title" type="TextureRect" parent="VBoxContainer/TitleContainer"]
+margin_left = 151.0
+margin_right = 569.0
+margin_bottom = 95.0
+texture = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_top = 242.0
+margin_right = 720.0
+margin_bottom = 336.0
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/VBoxContainer"]
+margin_right = 720.0
+margin_bottom = 45.0
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/CenterContainer"]
+margin_left = 222.0
+margin_right = 498.0
+margin_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_pivot_offset = Vector2( 138, 22.5 )
+focus_mode = 0
+enabled_focus_mode = 0
+icon = ExtResource( 3 )
+flat = true
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/CenterContainer/Button"]
+margin_left = 58.0
+margin_top = 4.0
+margin_right = 133.0
+margin_bottom = 41.0
+custom_fonts/font = SubResource( 1 )
+text = "Start"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="VBoxContainer/VBoxContainer/CenterContainer/Button"]
+wait_time = 0.1
+one_shot = true
+
+[node name="CenterContainer2" type="CenterContainer" parent="VBoxContainer/VBoxContainer"]
+margin_top = 49.0
+margin_right = 720.0
+margin_bottom = 94.0
+
+[node name="Button" type="Button" parent="VBoxContainer/VBoxContainer/CenterContainer2"]
+margin_left = 222.0
+margin_right = 498.0
+margin_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_pivot_offset = Vector2( 138, 22.5 )
+focus_mode = 0
+enabled_focus_mode = 0
+icon = ExtResource( 3 )
+flat = true
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/CenterContainer2/Button"]
+margin_left = 46.8785
+margin_top = 3.88351
+margin_right = 143.879
+margin_bottom = 40.8835
+custom_fonts/font = SubResource( 1 )
+text = "About"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="VBoxContainer/VBoxContainer/CenterContainer2/Button"]
+wait_time = 0.1
+one_shot = true
+[connection signal="button_down" from="VBoxContainer/VBoxContainer/CenterContainer/Button" to="VBoxContainer/VBoxContainer/CenterContainer/Button" method="set_button_scale" binds= [ 1.0 ]]
+[connection signal="button_up" from="VBoxContainer/VBoxContainer/CenterContainer/Button" to="VBoxContainer/VBoxContainer/CenterContainer/Button" method="set_button_scale" binds= [ 1.1 ]]
+[connection signal="mouse_entered" from="VBoxContainer/VBoxContainer/CenterContainer/Button" to="VBoxContainer/VBoxContainer/CenterContainer/Button" method="set_painted" binds= [ true ]]
+[connection signal="mouse_exited" from="VBoxContainer/VBoxContainer/CenterContainer/Button" to="VBoxContainer/VBoxContainer/CenterContainer/Button" method="set_painted" binds= [ false ]]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/CenterContainer/Button" to="VBoxContainer/VBoxContainer/CenterContainer/Button/Timer" method="start"]
+[connection signal="timeout" from="VBoxContainer/VBoxContainer/CenterContainer/Button/Timer" to="VBoxContainer/VBoxContainer/CenterContainer/Button" method="set_scene" binds= [ "res://scenes/World.tscn" ]]
+[connection signal="button_down" from="VBoxContainer/VBoxContainer/CenterContainer2/Button" to="VBoxContainer/VBoxContainer/CenterContainer2/Button" method="set_button_scale" binds= [ 1.0 ]]
+[connection signal="button_up" from="VBoxContainer/VBoxContainer/CenterContainer2/Button" to="VBoxContainer/VBoxContainer/CenterContainer2/Button" method="set_button_scale" binds= [ 1.1 ]]
+[connection signal="mouse_entered" from="VBoxContainer/VBoxContainer/CenterContainer2/Button" to="VBoxContainer/VBoxContainer/CenterContainer2/Button" method="set_painted" binds= [ true ]]
+[connection signal="mouse_exited" from="VBoxContainer/VBoxContainer/CenterContainer2/Button" to="VBoxContainer/VBoxContainer/CenterContainer2/Button" method="set_painted" binds= [ false ]]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer/CenterContainer2/Button" to="VBoxContainer/VBoxContainer/CenterContainer2/Button/Timer" method="start"]
+[connection signal="timeout" from="VBoxContainer/VBoxContainer/CenterContainer2/Button/Timer" to="VBoxContainer/VBoxContainer/CenterContainer2/Button" method="set_scene" binds= [ "res://scenes/About.tscn" ]]

@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/LevelWarp.gd" type="Script" id=1]
+[ext_resource path="res://images/assets/level_warp.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 28.3181
+
+[node name="LevelWarp" type="Area2D" groups=[
+"warp",
+]]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+offset = Vector2( 0, -3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+[connection signal="body_entered" from="." to="." method="warp_triggered"]

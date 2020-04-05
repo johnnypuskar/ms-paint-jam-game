@@ -11,6 +11,8 @@ onready var center = $CenterPoint
 onready var collider = $Collision
 onready var anim = $AnimationPlayer
 onready var tween = $Tween
+onready var shift_areas = {Vector2(0,1):$ShiftCollision_Down,Vector2(-1,0):$ShiftCollision_Left,Vector2(1,0):$ShiftCollision_Right}
+const SHIFT_ANIM_DICT = {Vector2(-1,0):"shift_horizontal",Vector2(1,0):"shift_horizontal",Vector2(0,1):"shift_vertical"}
 
 var movement_disabled = false
 var velocity = Vector2()
@@ -79,12 +81,17 @@ func shift(input_velocity, distance):
 	var shift_dir = Vector2()
 	if input_velocity.x != 0:
 		shift_dir.x = sign(input_velocity.x)
-		anim.play("shift_horizontal")
 	elif Input.is_action_pressed("move_duck"):
 		shift_dir.y = 1
-		anim.play("shift_vertical")
 	shift_dir = shift_dir.normalized()
 	var grav_angle = DOWN.angle_to(gravity_direction)
+	if shift_areas[shift_dir].get_overlapping_bodies().size() > 0:
+		return
+	if shift_areas[shift_dir].get_overlapping_areas().size() > 0:
+		for area in shift_areas[shift_dir].get_overlapping_areas():
+			if area.get_parent().solid:
+				return
+	anim.play(SHIFT_ANIM_DICT[shift_dir])
 	shift_dir = shift_dir.rotated(grav_angle)
 	movement_disabled = true
 	tween.interpolate_property(self, 'position', position, position + shift_dir*(64+distance),0.4)
@@ -95,7 +102,9 @@ func enable_movement():
 
 func set_gravity():
 	if center.is_colliding():
-		gravity_direction = center.get_collider().get_parent().gravity
+		var new_grav = center.get_collider().get_parent().gravity
+		if new_grav != null:
+			gravity_direction = new_grav
 
 func on_ground():
 	return rays["DL"].is_colliding() || rays["DR"].is_colliding()

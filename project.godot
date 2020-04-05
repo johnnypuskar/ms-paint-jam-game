@@ -16,11 +16,11 @@ _global_script_class_icons={
 [application]
 
 config/name="PaintJamGame"
+run/main_scene="res://scenes/Menu.tscn"
 
 [display]
 
-window/size/width=1280
-window/size/height=720
+window/size/width=720
 
 [input]
 
@@ -52,4 +52,5 @@ move_duck={
 
 [rendering]
 
+environment/default_clear_color=Color( 0.886275, 0.870588, 0.866667, 1 )
 environment/default_environment="res://default_env.tres"

@@ -14,16 +14,27 @@ color = Color( 0, 0, 0, 1 )
 [node name="Outline" type="Line2D" parent="."]
 default_color = Color( 0, 0, 0, 1 )
 
-[node name="WallTop" type="CollisionShape2D" parent="."]
+[node name="WallTop" type="CollisionShape2D" parent="." groups=[
+"box_walls",
+]]
 
-[node name="WallLeft" type="CollisionShape2D" parent="."]
+[node name="WallLeft" type="CollisionShape2D" parent="." groups=[
+"box_walls",
+]]
 
-[node name="WallBottom" type="CollisionShape2D" parent="."]
+[node name="WallBottom" type="CollisionShape2D" parent="." groups=[
+"box_walls",
+]]
 
-[node name="WallRight" type="CollisionShape2D" parent="."]
+[node name="WallRight" type="CollisionShape2D" parent="." groups=[
+"box_walls",
+]]
+
+[node name="CentralCollision" type="CollisionShape2D" parent="."]
+disabled = true
 
 [node name="GravityArea" type="Area2D" parent="."]
-collision_layer = 4
+collision_layer = 12
 collision_mask = 4
 
 [node name="CollisionZone" type="CollisionShape2D" parent="GravityArea"]
