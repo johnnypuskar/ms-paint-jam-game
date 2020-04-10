@@ -16,8 +16,14 @@ var current_id = -1
 var player_start = Vector2()
 var level_end = Vector2()
 
+var level_width = -1
+var level_height = -1
+
 var player_ref = null
 var warp_ref = null
+
+onready var boundaries = {"left":$Boundaries/Boundary_Left,"right":$Boundaries/Boundary_Right,"top":$Boundaries/Boundary_Top,"bottom":$Boundaries/Boundary_Bottom}
+const BOUNDARY_WIDTH = 50
 
 func _ready():
 	pass
@@ -29,6 +35,23 @@ func reset():
 func load_level(id):
 	current_id = id
 	generate_level(read_level_file("level" + str(id) + ".txt"))
+
+func set_boundaries():
+	boundaries["left"].shape = RectangleShape2D.new()
+	boundaries["left"].position = Vector2(-BOUNDARY_WIDTH/2,level_height/2)
+	boundaries["left"].shape.extents = Vector2(BOUNDARY_WIDTH/2, (level_height+BOUNDARY_WIDTH)/2)
+	
+	boundaries["right"].shape = RectangleShape2D.new()
+	boundaries["right"].position = Vector2(level_width+BOUNDARY_WIDTH/2,level_height/2)
+	boundaries["right"].shape.extents = Vector2(BOUNDARY_WIDTH/2, (level_height+BOUNDARY_WIDTH)/2)
+	
+	boundaries["top"].shape = RectangleShape2D.new()
+	boundaries["top"].position = Vector2(level_width/2, -BOUNDARY_WIDTH/2)
+	boundaries["top"].shape.extents = Vector2((level_width+BOUNDARY_WIDTH)/2,BOUNDARY_WIDTH/2)
+	
+	boundaries["bottom"].shape = RectangleShape2D.new()
+	boundaries["bottom"].position = Vector2(level_width/2, level_height+BOUNDARY_WIDTH/2)
+	boundaries["bottom"].shape.extents = Vector2((level_width+BOUNDARY_WIDTH)/2,BOUNDARY_WIDTH/2)
 
 func read_level_file(filename):
 	var result = []
@@ -59,7 +82,13 @@ func generate_level(level):
 		boxes.remove(0)
 	if level == null:
 		return
+	level_width = 0
+	level_height = 0
 	for box in level:
+		if box["x"] == 0:
+			level_height += box["height"]
+		if box["y"] == 0:
+			level_width += box["width"]
 		var new_node = BOX_SCENE.instance()
 		new_node.set_data(box["x"], box["y"], box["width"], box["height"], box["color"], 10, box["is_solid"])
 		add_child(new_node)
@@ -77,3 +106,4 @@ func generate_level(level):
 	new_w.warp_id = current_id + 1
 	get_parent().call_deferred("add_child", new_w)
 	warp_ref = new_w
+	set_boundaries()
